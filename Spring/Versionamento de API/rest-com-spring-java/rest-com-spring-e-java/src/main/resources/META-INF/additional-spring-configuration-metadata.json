@@ -1,0 +1,32 @@
+{"properties": [
+  {
+    "name": "spring.logging.level.br.com.diogo-alvarenga",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.logging.level.br.com.diogo-alvarenga'"
+  },
+  {
+    "name": "spring.logging.level.br.com.diogo_alvarenga.controller",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.logging.level.br.com.diogo_alvarenga.controller'"
+  },
+  {
+    "name": "spring.logging.level.root",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.logging.level.root'"
+  }
+]}{
+    "name": "spring.logging.level.root",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.logging.level.root'"
+  }
+]}{
+    "name": "spring.logging.level.root",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.logging.level.root'"
+  }
+]}{
+    "name": "spring.logging.level.root",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.logging.level.root'"
+  }
+]}
