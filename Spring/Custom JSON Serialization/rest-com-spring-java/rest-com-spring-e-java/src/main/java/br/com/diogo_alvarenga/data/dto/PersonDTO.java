@@ -1,16 +1,21 @@
 package br.com.diogo_alvarenga.data.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import br.com.diogo_alvarenga.serializer.GenderSerializer;
 
 
 
 //Definir ordem do json
-@JsonPropertyOrder({"id","address","first_name","last_name","gender"})
+//@JsonPropertyOrder({"id","address","first_name","last_name","gender"})
 public class PersonDTO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -19,15 +24,20 @@ public class PersonDTO implements Serializable{
 	private Long id;
 	
 	//definir o nome que vai aparecer
-	@JsonProperty("first_name")//mudei o nome, agora tenho que trocar la em cima no PropertyOrder
+	//@JsonProperty("first_name")//mudei o nome, agora tenho que trocar la em cima no PropertyOrder
 	private String firstName;
 	
-	@JsonProperty("last_name")
+	//@JsonProperty("last_name")
 	private String lastName;
+
+	//Formatar data para padrao br
+	@JsonFormat(pattern = "dd/mm/yyyy")
+	private Date birthDay;
 	
 	private String address;
 	
-	@JsonIgnore //irá ser ignorado
+	//@JsonIgnore //irá ser ignorado
+	@JsonSerialize(using = GenderSerializer.class)//se houver duvida, olhar a classe GenderSerializer
 	private String gender;
 	
 	public Long getId() {
@@ -70,13 +80,24 @@ public class PersonDTO implements Serializable{
 		this.gender = gender;
 	}
 
+	public Date getBirthDay() {
+		return birthDay;
+	}
 
+	public void setBirthDay(Date birthDay) {
+		this.birthDay = birthDay;
+	}
+
+	
+
+	
+	
 	@Override
 	public int hashCode() {
 		//O hashcode faz um calculo para criar um hash para cada dado
 		//assim, cada dado diferente tera um hashcode diferente
 		//e cada dado igual terá um hashcode igual
-		return Objects.hash(address, firstName, gender, id, lastName);
+		return Objects.hash(address, birthDay, firstName, gender, id, lastName);
 	}
 
 	@Override
@@ -85,30 +106,29 @@ public class PersonDTO implements Serializable{
 	    // Exemplo:
 	    // Person p1 = new Person("Ana");
 	    // Person p2 = p1; // p1 e p2 referenciam o mesmo objeto
-	    if (this == obj) // 'this' se refere ao objeto que chamou o método, ou seja, a instância atual
-	        return true;
-
+		if (this == obj)// 'this' se refere ao objeto que chamou o método, ou seja, a instância atual
+			return true;
+		
 	    // Se o objeto passado for nulo, eles não são iguais
-	    if (obj == null)
-	        return false;
-
-	    // Verifica se 'obj' é da mesma classe exata que 'this'
-	    if (getClass() != obj.getClass()) // compara o tipo real dos objetos
-	        return false;
-
+		if (obj == null)
+			return false;
+		
+	    // Verifica se 'obj' é da mesma classe exata que 'this'		
+		if (getClass() != obj.getClass()) // compara o tipo real dos objetos
+			return false;
+		
 	    // Faz o cast para 'Person' porque já garantimos que são da mesma classe
-	    PersonDTO other = (PersonDTO) obj;
-
+		PersonDTO other = (PersonDTO) obj;
+		
 	    // Compara os atributos relevantes para definir se os objetos são "iguais"
-	    return Objects.equals(address, other.address) 
-	        && Objects.equals(firstName, other.firstName)
-	        && Objects.equals(gender, other.gender) 
-	        && Objects.equals(id, other.id)
-	        && Objects.equals(lastName, other.lastName);
+		return Objects.equals(address, other.address) 
+				&& Objects.equals(birthDay, other.birthDay)
+				&& Objects.equals(firstName, other.firstName) 
+				&& Objects.equals(gender, other.gender)
+				&& Objects.equals(id, other.id) 
+				&& Objects.equals(lastName, other.lastName);
 	}
 
-	
-	
 	public PersonDTO() {
 		
 	}
