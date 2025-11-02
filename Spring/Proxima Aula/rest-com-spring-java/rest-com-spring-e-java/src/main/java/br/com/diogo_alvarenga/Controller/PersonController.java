@@ -1,6 +1,5 @@
 package br.com.diogo_alvarenga.Controller;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +34,7 @@ public class PersonController {
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public PersonDTO findById(@PathVariable("id") Long id) {
-		var person = service.findById(id);
-		person.setBirthDay(new Date());
-		//person.setPhoneNumber("+55 (35) 98765-4321");
-		person.setPhoneNumber("");
-		person.setLastName(null);
-		person.setSensitiveData("Foo Bar");
-		return person;
+		return service.findById(id);
 	}
 	
 	

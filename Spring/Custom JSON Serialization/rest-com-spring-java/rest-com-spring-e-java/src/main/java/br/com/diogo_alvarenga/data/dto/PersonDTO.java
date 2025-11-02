@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -16,6 +18,7 @@ import br.com.diogo_alvarenga.serializer.GenderSerializer;
 
 //Definir ordem do json
 //@JsonPropertyOrder({"id","address","first_name","last_name","gender"})
+@JsonFilter("PersonFilter")
 public class PersonDTO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -28,8 +31,12 @@ public class PersonDTO implements Serializable{
 	private String firstName;
 	
 	//@JsonProperty("last_name")
+	@JsonInclude(JsonInclude.Include.NON_NULL)//esse cambo só será renderizado quando nao estiver nulo
 	private String lastName;
 
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)//se tiver vazia, nao será renderizado
+	private String phoneNumber;
+	
 	//Formatar data para padrao br
 	@JsonFormat(pattern = "dd/mm/yyyy")
 	private Date birthDay;
@@ -39,6 +46,9 @@ public class PersonDTO implements Serializable{
 	//@JsonIgnore //irá ser ignorado
 	@JsonSerialize(using = GenderSerializer.class)//se houver duvida, olhar a classe GenderSerializer
 	private String gender;
+	
+	private String sensitiveData;
+
 	
 	public Long getId() {
 		return id;
@@ -88,8 +98,21 @@ public class PersonDTO implements Serializable{
 		this.birthDay = birthDay;
 	}
 
-	
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
 
+	public void setPhoneNumber(String number) {
+		this.phoneNumber = number;
+	}
+
+	public String getSensitiveData() {
+		return sensitiveData;
+	}
+
+	public void setSensitiveData(String sensitiveData) {
+		this.sensitiveData = sensitiveData;
+	}
 	
 	
 	@Override
@@ -97,7 +120,7 @@ public class PersonDTO implements Serializable{
 		//O hashcode faz um calculo para criar um hash para cada dado
 		//assim, cada dado diferente tera um hashcode diferente
 		//e cada dado igual terá um hashcode igual
-		return Objects.hash(address, birthDay, firstName, gender, id, lastName);
+		return Objects.hash(address, birthDay, firstName, gender, id, lastName, phoneNumber, sensitiveData);
 	}
 
 	@Override
@@ -126,7 +149,10 @@ public class PersonDTO implements Serializable{
 				&& Objects.equals(firstName, other.firstName) 
 				&& Objects.equals(gender, other.gender)
 				&& Objects.equals(id, other.id) 
-				&& Objects.equals(lastName, other.lastName);
+				&& Objects.equals(lastName, other.lastName)
+				&& Objects.equals(phoneNumber, other.phoneNumber)
+				&& Objects.equals(sensitiveData, other.sensitiveData);
+
 	}
 
 	public PersonDTO() {
