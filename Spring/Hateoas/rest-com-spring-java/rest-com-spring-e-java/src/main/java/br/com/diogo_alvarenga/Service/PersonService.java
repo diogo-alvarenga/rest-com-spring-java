@@ -38,7 +38,7 @@ public class PersonService {
 		
 		//convertendo para personDTO
 		var dto = parseObject(entity, PersonDTO.class);
-		addHateoasLinks(id,dto);
+		addHateoasLinks(dto);
 		return dto;
 	}
 	
@@ -49,7 +49,10 @@ public class PersonService {
 		logger.info("Find all People!");
 		
 		//converte para personDTO
-		return parseListObjects(repository.findAll(), PersonDTO.class);
+		var persons=  parseListObjects(repository.findAll(), PersonDTO.class);
+		persons.forEach(this:: addHateoasLinks);//para cada objeto que vier :: mande para esse metodo
+		return persons;
+	
 	}
 	
 	
@@ -61,7 +64,9 @@ public class PersonService {
 		var entity = parseObject(person, Person.class);
 		
 		//salva e converte para DTO
-		return parseObject( repository.save(entity), PersonDTO.class);
+		var dto = parseObject( repository.save(entity), PersonDTO.class);
+		addHateoasLinks(dto);
+		return dto;
 	}
 	
 	
@@ -76,7 +81,9 @@ public class PersonService {
 		entity.setAddress(person.getAddress());
 		entity.setGender(person.getGender());
 		
-		return parseObject( repository.save(entity), PersonDTO.class);
+		var dto = parseObject( repository.save(entity), PersonDTO.class);
+		addHateoasLinks(dto);
+		return dto;
 	}
 	
 	
@@ -89,14 +96,14 @@ public class PersonService {
 		repository.delete(entity);
 	}
 	
-	private static void addHateoasLinks(Long id, PersonDTO dto) {
+	private void addHateoasLinks(PersonDTO dto) {
 		dto.add(linkTo(methodOn(PersonController.class)//diz que o objeto terá um link para ummetodo DE PersonController
-				.findById(id))// qual metodo? findById
+				.findById(dto.getId()))// qual metodo? findById
 				.withSelfRel()//diz o papel do link, e esse metodo diz que seria o link principal(autoLink)
 				.withType("GET"));//diz que o tipo do link é um GET
 		
 		dto.add(linkTo(methodOn(PersonController.class)
-				.delete(id))
+				.delete(dto.getId()))
 				.withRel("delete")
 				.withType("DELETE"));
 		

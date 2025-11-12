@@ -98,4 +98,62 @@ Para o suporte do Hateoas use o Mokito e o JUnit
       		href: "http://localhost:8080/api/person/v1"
       		type: "PUT"
 
+> Adicione os links Hateoas nos outros métodos:
+
+	public PersonDTO create(PersonDTO person) {
+		logger.info("Create one Person!");
+		
+		//convertendo de DTO para person(entidade)
+		var entity = parseObject(person, Person.class);
+		
+		//salva e converte para DTO
+		var dto = parseObject( repository.save(entity), PersonDTO.class);
+		addHateoasLinks(dto); //Adicione essa linha
+		return dto;
+	}
+
+	public List<PersonDTO> findAll() {
+		
+		logger.info("Find all People!");
+		
+		//converte para personDTO
+		var persons=  parseListObjects(repository.findAll(), PersonDTO.class);
+		persons.forEach(this:: addHateoasLinks);//para cada objeto que vier :: mande para esse metodo
+		return persons;
+	
+	}
+
+	public PersonDTO update(PersonDTO person) {
+		logger.info("Updating one Person!");
+			
+		Person entity = repository.findById(person.getId())
+				.orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
+		entity.setFirstName(person.getFirstName());
+		entity.setLastName(person.getLastName());
+		entity.setAddress(person.getAddress());
+		entity.setGender(person.getGender());
+		
+		var dto = parseObject( repository.save(entity), PersonDTO.class);
+		addHateoasLinks(dto);
+		return dto;
+	}
+
+	//Lembrando que delete não precisa
+
+> Mockito - https://site.mockito.org/
+
+* É um framework de testes e spy
+* Ele simula a instancia de classes e o comportamento de métodos
+* Ao mockar uma dependência com Mokito, eu faço com que a classe que irá ser testada, simule o
+método testado e suas depencias
+* Durante o mock, eu posso configurar o retorno e as ações de acordo com as necessidades do teste
+
+* Principais funções:
+* Fazer mocks - ela cria a instancia de uma classe, porem, mockada. Se ele chamar um método, não ira chamar o método real(a não ser que queira)
+
+* Spy - Criar uma instancia da classe que voce pode mockar ou chamar métodos reais - alternativa a objectsMocks
+* Inject Mocks - Cria uma instancia e injeta as dependências necessárias que estão anotadas com @Mock
+* Verify - Verifica a quantidade de vezes e quais parâmetros utilizados para acessar determinado método
+* When - após um mock ser criado voce pode configurar as ações da chamada e qual o retorno que vai receber
+* Matchers - Permite que verifique por meio de matchers os argumentos como N-Objects, N-Strings etc
 
