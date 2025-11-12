@@ -1,0 +1,101 @@
+HATEOAS
+
+Fornecer links relevantes de acordo com os dados cadastrados
+Para o suporte do Hateoas use o Mokito e o JUnit
+
+>>>Hateoas é necessário para a aplicação ser RESTFUL<<<
+
+> Coloque a seguinte dependência no POM.XML
+		<dependency>
+			<groupId>org.springframework.hateoas</groupId>
+			<artifactId>spring-hateoas</artifactId>
+		</dependency>
+
+> Na classe PersonDto, faça ela extender a classe RepresentationModel do a biblioteca do hateoas, e diga que o tipo da RepresentationModel é PersonDTO
+
+> No service, faça as seguinte importações:
+	import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+	import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+> Adicione as modificações no método findById(as modificações estao a partir de dto.add())
+	public PersonDTO findById(Long id) {
+		logger.info("Finding one Person!");		
+		var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
+		//convertendo para personDTO
+		var dto = parseObject(entity, PersonDTO.class);
+		dto.add(linkTo(methodOn(PersonController.class)//diz que o objeto terá um link para um metodo DE PersonController
+				.findById(id))// qual metodo? findById
+				.withSelfRel()//diz o papel do link, e esse metodo diz que seria o link principal
+				.withType("GET"));//diz que o tipo do link é um GET
+		return dto;
+	}
+
+> Isso fará retornar:
+	---
+	id: 13
+	firstName: "Neil"
+	lastName: "Armstrong"
+	address: "Wapakoneta - US"
+	gender: "Male"
+	links:
+    		- rel: "self"
+      		href: "http://localhost:8080/api/person/v1/13"
+      		type: "GET"
+
+> Agora, é necessário notar que seria mais eficiente se a adição desse link fosse um método a parte, portando o dto.add() irá virar um método
+	então na linha dto.add(), coloque
+		addHateoasLinks(id,dto);
+	e crie um método
+	
+		private static void addHateoasLinks(Long id, PersonDTO dto) {
+			dto.add(linkTo(methodOn(PersonController.class)//diz que o objeto terá um link para ummetodo DE PersonController
+				.findById(id))// qual metodo? findById
+				.withSelfRel()//diz o papel do link, e esse metodo diz que seria o link principal(autoLink)
+				.withType("GET"));//diz que o tipo do link é um GET
+		
+			dto.add(linkTo(methodOn(PersonController.class)
+				.delete(id))
+				.withRel("delete")
+				.withType("DELETE"));
+		
+			dto.add(linkTo(methodOn(PersonController.class)
+				.findById())
+				.withRel("findById")
+				.withType("GET"));
+		
+			dto.add(linkTo(methodOn(PersonController.class)
+				.create(dto))
+				.withRel("create")
+				.withType("POST"));
+		
+			dto.add(linkTo(methodOn(PersonController.class)
+				.updatePerson(dto))
+				.withRel("update")
+				.withType("PUT"));
+			}
+
+> Isso irá retornar:
+	---
+	id: 13
+	firstName: "Neil"
+	lastName: "Armstrong"
+	address: "Wapakoneta - US"
+	gender: "Male"
+	links:
+    		- rel: "self"
+      		href: "http://localhost:8080/api/person/v1/13"
+      		type: "GET"
+    		- rel: "delete"
+      		href: "http://localhost:8080/api/person/v1/13"
+      		type: "DELETE"
+    		- rel: "findById"
+      		href: "http://localhost:8080/api/person/v1"
+      		type: "GET"
+    		- rel: "create"
+      		href: "http://localhost:8080/api/person/v1"
+      		type: "POST"
+    		- rel: "update"
+      		href: "http://localhost:8080/api/person/v1"
+      		type: "PUT"
+
+
