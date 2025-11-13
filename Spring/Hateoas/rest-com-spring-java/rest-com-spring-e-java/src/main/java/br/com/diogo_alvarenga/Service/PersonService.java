@@ -1,7 +1,6 @@
 package br.com.diogo_alvarenga.Service;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +20,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class PersonService {
-
-	private final AtomicLong counter = new AtomicLong();
 
 	@Autowired
 	PersonRepository repository;
