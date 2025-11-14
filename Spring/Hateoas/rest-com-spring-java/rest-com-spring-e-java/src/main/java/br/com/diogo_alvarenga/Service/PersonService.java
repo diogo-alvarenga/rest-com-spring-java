@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.diogo_alvarenga.Controller.PersonController;
+import br.com.diogo_alvarenga.Exception.RequiredObjectIsNullException;
 import br.com.diogo_alvarenga.Exception.ResourceNotFoundException;
 import br.com.diogo_alvarenga.Model.Person;
 import br.com.diogo_alvarenga.Repository.PersonRepository;
@@ -55,6 +56,9 @@ public class PersonService {
 	
 
 	public PersonDTO create(PersonDTO person) {
+		
+		if(person == null) throw new RequiredObjectIsNullException();
+		
 		logger.info("Create one Person!");
 		
 		//convertendo de DTO para person(entidade)
@@ -69,6 +73,8 @@ public class PersonService {
 	
 	
 	public PersonDTO update(PersonDTO person) {
+		if(person == null) throw new RequiredObjectIsNullException();
+		
 		logger.info("Updating one Person!");
 			
 		Person entity = repository.findById(person.getId())

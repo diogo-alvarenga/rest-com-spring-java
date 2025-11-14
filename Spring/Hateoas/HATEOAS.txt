@@ -269,6 +269,7 @@ método testado e suas depencias
 	}
 
 
+>>> Verificar os outros metodos no proprio programa(que seguem a mesma estrutura do de cima), esta tudo bem documentado
 
 
 

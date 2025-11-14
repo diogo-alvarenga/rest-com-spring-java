@@ -11,6 +11,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import br.com.diogo_alvarenga.Exception.ExceptionResponse;
+import br.com.diogo_alvarenga.Exception.RequiredObjectIsNullException;
 import br.com.diogo_alvarenga.Exception.ResourceNotFoundException;
 
 //ControllerAdvice é um manipulador de excecoes global
@@ -35,5 +36,14 @@ public class CustomEntityResponseHandler extends ResponseEntityExceptionHandler{
 				ex.getMessage(),
 				request.getDescription(false));
 		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(RequiredObjectIsNullException.class)//qual excecao irá tratar
+	public final ResponseEntity<ExceptionResponse> handleBadRequestExceptions(Exception ex, WebRequest request){
+		ExceptionResponse response = new ExceptionResponse(
+				new Date(),
+				ex.getMessage(),
+				request.getDescription(false));
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 }
