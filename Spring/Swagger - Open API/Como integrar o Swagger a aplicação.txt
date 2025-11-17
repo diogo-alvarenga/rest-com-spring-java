@@ -1,0 +1,12 @@
+Como integrar o Swagger a aplicação
+
+>Swagger é uma das ferramentas mais importantes para APIs RESTful
+
+>Swagger facilita o processo de definir, criar, documentar, e consumir serviços RESTful
+
+>>Esse padrão descreve endpoints, dados enviados e recebidos, status codes e métodos de autenticação de forma unificada 
+
+>Swagger permite testar endpoints, enviar requisições e ver respostas em tempo real
+
+>O coração do Swagger é um arquivo JSON ou YAML que define toda a API
+
