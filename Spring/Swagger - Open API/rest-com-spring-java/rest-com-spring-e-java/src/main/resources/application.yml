@@ -1,3 +1,4 @@
+---
 spring:
   application:
     name: rest-com-spring-e-java
@@ -16,3 +17,7 @@ spring:
   logging:
     level:
       br.com.diogo-alvarenga: DEBUG
+  spring-doc:
+    paths-to-match: /api/**/v1/**
+    swagger-ui:
+      use-root-path: true

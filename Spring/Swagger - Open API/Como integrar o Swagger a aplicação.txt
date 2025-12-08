@@ -10,3 +10,39 @@ Como integrar o Swagger a aplicação
 
 >O coração do Swagger é um arquivo JSON ou YAML que define toda a API
 
+
+>> Coloque no yaml
+
+  spring-doc:
+    paths-to-match: /api/**/v1/**
+
+> O que faz?
+	Traduzindo, isso define quais endpoints o springdoc deve incluir na documentação.
+	Lê-se assim:
+		/api/nomeController/versao/qualquerCoisa
+
+	Só serão documentados endpoints cujo path contenha algo como:
+		/api/.../v1/...
+		/api/*qualquerController*/v1/*qualquerendPoint*
+
+> Depois coloque em baixo:
+	
+	swagger-ui:
+      		use-root-path: true
+
+   Vai ficar assim:	
+
+	  spring-doc:
+    		paths-to-match: /api/**/v1/**
+    		swagger-ui:
+      			use-root-path: true
+
+> O que faz?
+	swagger ui: 
+		Configura comportamentos da interface Swagger UI
+	
+	use-root-path: true :
+		Faz com que o Swagger UI seja servido no root, ou seja:
+			http://localhost:8080/swagger-ui.html
+	Se estiver false, o Swagger UI ficaria em algo como:
+		http://localhost:8080/api/swagger-ui.html
