@@ -46,3 +46,49 @@ Como integrar o Swagger a aplicação
 			http://localhost:8080/swagger-ui.html
 	Se estiver false, o Swagger UI ficaria em algo como:
 		http://localhost:8080/api/swagger-ui.html
+
+>Coloque a marcação @Tag no controller, como mostrado a baixo:
+
+	@RestController
+	@RequestMapping("/api/person/v1")
+	@Tag(name = "People", description = "Endpoints for Managing People")
+	public class PersonController { ...
+
+>Para que essa anotação serve?
+
+	A anotação @Tag é usada para organizar e agrupar endpoints na documentação Swagger/OpenAPI. 
+	Na documentação gerada (Swagger UI ou ReDoc), todos os endpoints desse controller vão aparecer agrupados na seção "People", com a descrição fornecida.
+
+>> Coloque a anotação @Operation no primeiro metodo (o findById padrao, que retorna todos)
+	
+	Essa anotação serve para fazer uma descrição na documentação do que esse metodo faz, com base nas informações que voce passa a ele
+	
+	>>Lembrando que tudo isso é para a DOCUMENTAÇÃO do codigo<<
+	
+	Use como guia os comentarios a direita do codigo, eles tambem estao presentes no codigo original
+
+
+	@Operation(
+		    summary = "", //Um resumo curto do que o endpoint faz
+		    description = "Find All People", //Uma descrição mais detalhada.
+		    tags = {"People"}, //Agrupa esse endpoint na documentação sob a categoria People, ele usa um {} porque é um array de strings, porque podemos enviar mais de um
+		    responses = { //a partir daqui é mostrado cada uma das possuiveis respostas da api
+		        @ApiResponse(
+		            description = "Success",
+		            responseCode = "200",
+		            content = @Content( //content é o corpo da resposta que o endpoint retorna
+		                mediaType = MediaType.APPLICATION_JSON_VALUE, //indica que o retorno será em formato json
+		                array = @ArraySchema(schema = @Schema(implementation = PersonDTO.class)) //indica que o corpo é um array de objetos, o schema diz que cada item da lista é um PersonDTO
+		            )
+		        ),
+		        @ApiResponse(description = "No Content", responseCode = "204", content = @Content()),
+		        @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content()),
+		        @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content()),
+		        @ApiResponse(description = "Not Found", responseCode = "404", content = @Content()),
+		        @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content())
+		    }
+		)
+	public List<PersonDTO> findById() {
+		return service.findAll();
+	}
+  

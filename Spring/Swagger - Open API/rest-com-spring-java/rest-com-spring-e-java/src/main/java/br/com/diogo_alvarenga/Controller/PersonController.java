@@ -17,9 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.diogo_alvarenga.Service.PersonService;
 import br.com.diogo_alvarenga.data.dto.PersonDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 @RestController
 @RequestMapping("/api/person/v1")
+@Tag(name = "People", description = "Endpoints for Managing People")
 public class PersonController {
 	
 	@Autowired
@@ -29,6 +37,26 @@ public class PersonController {
 	@GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE, 
 								MediaType.APPLICATION_XML_VALUE,
 								MediaType.APPLICATION_YAML_VALUE})
+	@Operation(
+		    summary = "", //Um resumo curto do que o endpoint faz
+		    description = "Find All People", //Uma descrição mais detalhada.
+		    tags = {"People"}, //Agrupa esse endpoint na documentação sob a categoria People, ele usa um {} porque é um array de strings, porque podemos enviar mais de um
+		    responses = { //a partir daqui é mostrado cada uma das possuiveis respostas da api
+		        @ApiResponse(
+		            description = "Success",
+		            responseCode = "200",
+		            content = @Content( //content é o corpo da resposta que o endpoint retorna
+		                mediaType = MediaType.APPLICATION_JSON_VALUE, //indica que o retorno será em formato json
+		                array = @ArraySchema(schema = @Schema(implementation = PersonDTO.class)) //indica que o corpo é um array de objetos, o schema diz que cada item da lista é um PersonDTO
+		            )
+		        ),
+		        @ApiResponse(description = "No Content", responseCode = "204", content = @Content()),
+		        @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content()),
+		        @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content()),
+		        @ApiResponse(description = "Not Found", responseCode = "404", content = @Content()),
+		        @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content())
+		    }
+		)
 	public List<PersonDTO> findById() {
 		return service.findAll();
 	}
