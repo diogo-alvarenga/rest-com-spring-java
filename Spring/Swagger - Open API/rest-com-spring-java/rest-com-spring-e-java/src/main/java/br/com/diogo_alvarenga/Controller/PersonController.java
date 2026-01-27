@@ -38,18 +38,18 @@ public class PersonController {
 								MediaType.APPLICATION_XML_VALUE,
 								MediaType.APPLICATION_YAML_VALUE})
 	@Operation(
-		    summary = "", //Um resumo curto do que o endpoint faz
+		    summary = "List all Person", //Um resumo curto do que o endpoint faz
 		    description = "Find All People", //Uma descrição mais detalhada.
 		    tags = {"People"}, //Agrupa esse endpoint na documentação sob a categoria People, ele usa um {} porque é um array de strings, porque podemos enviar mais de um
 		    responses = { //a partir daqui é mostrado cada uma das possuiveis respostas da api
 		        @ApiResponse(
 		            description = "Success",
 		            responseCode = "200",
-		            content = @Content( //content é o corpo da resposta que o endpoint retorna
+		            content = { @Content( //content é o corpo da resposta que o endpoint retorna
 		                mediaType = MediaType.APPLICATION_JSON_VALUE, //indica que o retorno será em formato json
 		                array = @ArraySchema(schema = @Schema(implementation = PersonDTO.class)) //indica que o corpo é um array de objetos, o schema diz que cada item da lista é um PersonDTO
-		            )
-		        ),
+		            		)
+		            }),
 		        @ApiResponse(description = "No Content", responseCode = "204", content = @Content()),
 		        @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content()),
 		        @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content()),
@@ -65,6 +65,24 @@ public class PersonController {
 	@GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, 
 												MediaType.APPLICATION_XML_VALUE,
 												MediaType.APPLICATION_YAML_VALUE})
+	
+	@Operation(
+		    summary = "Find a Person", //Um resumo curto do que o endpoint faz
+		    description = "Find a specific Person by your id", //Uma descrição mais detalhada.
+		    tags = {"People"}, //Agrupa esse endpoint na documentação sob a categoria People, ele usa um {} porque é um array de strings, porque podemos enviar mais de um
+		    responses = { //a partir daqui é mostrado cada uma das possuiveis respostas da api
+		        @ApiResponse(
+		            description = "Success",
+		            responseCode = "200",
+		            content =  @Content(schema = @Schema(implementation = PersonDTO.class))
+		            ),
+		        @ApiResponse(description = "No Content", responseCode = "204", content = @Content()),
+		        @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content()),
+		        @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content()),
+		        @ApiResponse(description = "Not Found", responseCode = "404", content = @Content()),
+		        @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content())
+		    }
+		)
 	public PersonDTO findById(@PathVariable("id") Long id) {
 		return service.findById(id);
 	}
@@ -78,6 +96,23 @@ public class PersonController {
 							MediaType.APPLICATION_XML_VALUE,
 							MediaType.APPLICATION_YAML_VALUE}//irá produzir
 			)
+	@Operation(
+		    summary = "Create a Person", //Um resumo curto do que o endpoint faz
+		    description = "Create a Person", //Uma descrição mais detalhada.
+		    tags = {"People"}, //Agrupa esse endpoint na documentação sob a categoria People, ele usa um {} porque é um array de strings, porque podemos enviar mais de um
+		    responses = { //a partir daqui é mostrado cada uma das possuiveis respostas da api
+		        @ApiResponse(
+		            description = "Success",
+		            responseCode = "200",
+		            content =  @Content(schema = @Schema(implementation = PersonDTO.class))
+		            ),
+		        @ApiResponse(description = "No Content", responseCode = "204", content = @Content()),
+		        @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content()),
+		        @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content()),
+		        @ApiResponse(description = "Not Found", responseCode = "404", content = @Content()),
+		        @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content())
+		    }
+		)
 	public PersonDTO create (@RequestBody PersonDTO person) {//o parametro vem do body e nao do path
 		return service.create(person);
 	}
@@ -86,12 +121,46 @@ public class PersonController {
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE
 			)
+	@Operation(
+		    summary = "Uptade a Person", //Um resumo curto do que o endpoint faz
+		    description = "Update a specific Person", //Uma descrição mais detalhada.
+		    tags = {"People"}, //Agrupa esse endpoint na documentação sob a categoria People, ele usa um {} porque é um array de strings, porque podemos enviar mais de um
+		    responses = { //a partir daqui é mostrado cada uma das possuiveis respostas da api
+		        @ApiResponse(
+		            description = "Success",
+		            responseCode = "200",
+		            content =  @Content(schema = @Schema(implementation = PersonDTO.class))
+		            ),
+		        @ApiResponse(description = "No Content", responseCode = "204", content = @Content()),
+		        @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content()),
+		        @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content()),
+		        @ApiResponse(description = "Not Found", responseCode = "404", content = @Content()),
+		        @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content())
+		    }
+		)
 	public PersonDTO updatePerson(@RequestBody PersonDTO person) {
 		return service.update(person);
 	}
 	
 	
 	@DeleteMapping(value= "/{id}")
+	@Operation(
+		    summary = "Delete a Person", //Um resumo curto do que o endpoint faz
+		    description = "Delete a specific Person by your id", //Uma descrição mais detalhada.
+		    tags = {"People"}, //Agrupa esse endpoint na documentação sob a categoria People, ele usa um {} porque é um array de strings, porque podemos enviar mais de um
+		    responses = { //a partir daqui é mostrado cada uma das possuiveis respostas da api
+		        @ApiResponse(
+		            description = "Success",
+		            responseCode = "200",
+		            content =  @Content(schema = @Schema(implementation = PersonDTO.class))
+		            ),
+		        @ApiResponse(description = "No Content", responseCode = "204", content = @Content()),
+		        @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content()),
+		        @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content()),
+		        @ApiResponse(description = "Not Found", responseCode = "404", content = @Content()),
+		        @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content())
+		    }
+		)
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
